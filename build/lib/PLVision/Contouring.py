@@ -11,6 +11,7 @@
 """
 import cv2
 import numpy as np
+sss
 def calculate_centroid(contour):
     """
        Calculates the centroid of a contour.
