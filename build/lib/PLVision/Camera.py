@@ -9,13 +9,9 @@
 * -----------------------------------------------------------------
 *
 """
-import datetime  # Import datetime
-import os
-import threading
-import tkinter  # Import tkinter
-from tkinter import Tk  # Import tkinter
+
 import cv2
-import numpy as np  # Import numpy
+
 
 
 class Camera:
