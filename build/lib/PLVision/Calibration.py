@@ -26,7 +26,7 @@ class CameraCalibrator:
             imgpoints (list): A list of corner points in image space for all images.
     """
 
-    def __init__(self, chessboard_width, chessboard_height, chessboard_squares_size):
+    def __init__(self, chessboardWidth, chessboardHeight, chessboardSquaresSize):
         """
             Initializes the CameraCalibrator with chessboard parameters.
 
@@ -35,9 +35,9 @@ class CameraCalibrator:
                 chessboard_height (int): Number of inner corners in chessboard columns.
                 chessboard_squares_size (float): Size of each chessboard square.
         """
-        self.chess_board_width = chessboard_width
-        self.chess_board_height = chessboard_height
-        self.chess_board_squares_size = chessboard_squares_size
+        self.chess_board_width = chessboardWidth
+        self.chess_board_height = chessboardHeight
+        self.chess_board_squares_size = chessboardSquaresSize
         self.criteria = self._init_criteria()
         self.objp = self._calculate_objp()
         self.objpoints = []
