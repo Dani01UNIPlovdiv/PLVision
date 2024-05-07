@@ -17,6 +17,7 @@ from tkinter import Tk  # Import tkinter
 import cv2
 import numpy as np  # Import numpy
 
+
 class Camera:
     """
     A class to represent a camera capture object.
