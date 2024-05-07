@@ -1,0 +1,14 @@
+README.txt
+setup.py
+PLVision/CNC.py
+PLVision/Calibration.py
+PLVision/Camera.py
+PLVision/Contouring.py
+PLVision/FileSelector.py
+PLVision/ImageProcessing.py
+PLVision/__init__.py
+PLVision.egg-info/PKG-INFO
+PLVision.egg-info/SOURCES.txt
+PLVision.egg-info/dependency_links.txt
+PLVision.egg-info/requires.txt
+PLVision.egg-info/top_level.txt
