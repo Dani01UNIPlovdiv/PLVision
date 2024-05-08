@@ -115,6 +115,7 @@ class Camera:
 if __name__ == "__main__":
     # Instantiate Camera object with some sample values and print the frame size
     camera = Camera(camera_index=0, width=1920, height=1080)
+    frame = camera.capture()
     while True:
         ret, frame = camera.cap.read()
         cv2.imshow('frame', frame)
