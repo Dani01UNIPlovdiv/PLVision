@@ -102,7 +102,15 @@ class Camera:
             tuple: The width and height of the camera feed.
         """
         return self.width, self.height
+    def capture(self):
+        """
+        Captures a frame from the camera feed.
 
+        Returns:
+            tuple: A tuple containing the return value and the frame.
+        """
+        ret,frame = self.cap.read()
+        return frame
 
 if __name__ == "__main__":
     # Instantiate Camera object with some sample values and print the frame size
