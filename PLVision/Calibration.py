@@ -226,6 +226,7 @@ class CameraCalibrator:
 
         if not ret:
             # Corner detection failed
+            print("Detection failed")
             return False, None, None, None
 
         # Refine corners for sub-pixel accuracy
