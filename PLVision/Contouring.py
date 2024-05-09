@@ -101,7 +101,7 @@ def translateContourAndChildren(contours, hierarchy, xOffset, yOffset, parentInd
         Note:
             This function modifies the input contours in place.
     """
-    childIndices = [] # List to store indices of child contours
+    childIndices = []
 
     # If parent_index is not provided, start from the root of the hierarchy
     if parentIndex is None:
@@ -114,9 +114,9 @@ def translateContourAndChildren(contours, hierarchy, xOffset, yOffset, parentInd
     childIndex = hierarchy[0][parentIndex][2]
 
     # Recursively translate child contours and collect child indices
-    while childIndex != -1: # While there are children
-        childIndices.append(childIndex) # Collect child index
-        childIndices.extend(translateContourAndChildren(contours, hierarchy, xOffset, yOffset, childIndex)) # Recursively translate children
+    while childIndex != -1:
+        childIndices.append(childIndex)
+        childIndices.extend(translateContourAndChildren(contours, hierarchy, xOffset, yOffset, childIndex))
         childIndex = hierarchy[0][childIndex][0]  # Get the next sibling index
 
     return childIndices
@@ -145,12 +145,12 @@ def drawContours(image, contours, contourColor, thickness):
         if index == 0:
             index = 1
             continue
-        cv2.drawContours(image, [contour], -1, contourColor, thickness) # Draw the contour
+        cv2.drawContours(image, [contour], -1, contourColor, thickness, cv2.LINE_AA)
 
     return image
 
 
-def findContours(image, kSize, sigmaX, threshold, maxval, type, mode, method, edged=None, kernel=None):
+def findContours(image, mode, method):
     """
         Finds contours in an image.
 
@@ -163,23 +163,21 @@ def findContours(image, kSize, sigmaX, threshold, maxval, type, mode, method, ed
     """
 
     # Convert the image to grayscale if it's not already
-    if len(image.shape) == 3:  # Color image
-        grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    else:
-        grayImage = image  # Assuming the image is already in grayscale
-    if edged is not None:
-        edgedImage = cv2.Canny(grayImage, edged[0], edged[1])  # Apply Canny edge detection
-    if kernel is not None:
-        kernelImage = np.ones(kernel[0], np.uint8)  # Create kernel
+    #if len(image.shape) == 3:  # Color image
+        #grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    #else:
+        #grayImage = image  # Assuming the image is already in grayscale
+
     # Apply Gaussian blur
-    bluredImage = cv2.GaussianBlur(grayImage, kSize, sigmaX)
+    #bluredImage = cv2.GaussianBlur(grayImage, (5, 5), 0)
     # Apply binary inversion thresholding
-    _, binary = cv2.threshold(bluredImage, threshold, maxval, type)
+    #_, binary = cv2.threshold(bluredImage, threshold, 255, cv2.THRESH_OTSU)
 
     # inverted_binary = ~binary
 
     # Find contours
     contours, hierarchy = cv2.findContours(binary, mode, method)
+    # contours, hierarchy = cv2.findContours(inverted_binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     return contours, hierarchy
 
@@ -237,8 +235,8 @@ def rotateContourAndChildren(contours, hierarchy, angle):
         contour = contours[contourIndex]
 
         # Rotate contour
-        rotated_contour = rotateContour(contour, angle, pivot)
-        contours[contourIndex] = rotated_contour
+        rotatedContour = rotateContour(contour, angle, pivot)
+        contours[contourIndex] = rotatedContour
 
         # Rotate child contours
         childIndex = hierarchy[0][contourIndex][2]  # First child
@@ -250,12 +248,12 @@ def rotateContourAndChildren(contours, hierarchy, angle):
     for i in range(len(contours)):
         if hierarchy[0][i][3] == -1:  # If contour has no parent
             # Calculate centroid of the top-level contour to use as a pivot
-            M = cv2.moments(contours[i])
-            if M["m00"] != 0:
-                cx = int(M["m10"] / M["m00"])
-                cy = int(M["m01"] / M["m00"])
-                pivot = (cx, cy)
-                rotateRecursive(i, pivot)
+            # M = cv2.moments(contours[i])
+            # if M["m00"] != 0:
+            #     cx = int(M["m10"] / M["m00"])
+            #     cy = int(M["m01"] / M["m00"])
+            pivot = calculateCentroid(contours[1])
+            rotateRecursive(i, pivot)
 
 
 def isContourWithinBbox(contour, bbox):
@@ -269,3 +267,6 @@ def isContourWithinBbox(contour, bbox):
         if x < x_min or x > x_max or y < y_min or y > y_max:
             return False  # Contour point lies outside the bounding box
     return True  # All contour points lie within the bounding box
+
+
+

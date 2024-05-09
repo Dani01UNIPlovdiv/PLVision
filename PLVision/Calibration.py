@@ -96,9 +96,10 @@ class CameraCalibrator:
         """
         # define the criteria to stop. We stop it after a specified number of iterations
         # or a certain accuracy is achieved, whichever occurs first.
-        criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, self.criteriaMaxIterations, self.criteriaMaxIterations)
+        criteria = (
+        cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, self.criteriaMaxIterations, self.criteriaMaxIterations)
         # Refine corner points
-        return cv2.cornerSubPix(gray, corners, self.winZone, self.zeroZone,criteria)
+        return cv2.cornerSubPix(gray, corners, self.winZone, self.zeroZone, criteria)
 
     def drawCorners(self, frame, corners2, ret):
         """
@@ -248,22 +249,11 @@ class CameraCalibrator:
 
 if __name__ == "__main__":
     camera = Camera(cameraIndex=0, width=1920, height=1080)
-    calibrator = CameraCalibrator(10, 15, 25)
-    print(calibrator.winZone)
-    print(calibrator.zeroZone)
 
+    calibrator = CameraCalibrator(10, 15, 25)
     calibrator.winZone = (12, 12)
     calibrator.zeroZone = (-2, -2)
-    image = camera.capture()
-    result, calibrationData, image2, corners = calibrator.performCameraCalibration(image, "some path")
-    print(calibrator.winZone)
-    print(calibrator.zeroZone)
-    # image = camera.capture()
-    result, calibrationData, image, corners = calibrator.performCameraCalibration(image, "some path")
-    print(calibrator.winZone)
-    print(calibrator.zeroZone)
-    calibrator2 = CameraCalibrator(10, 15, 25)
-    calibrator2.winZone = (15, 12)
-    calibrator2.zeroZone = (-4, -2)
-    print("calibrator2",calibrator2.winZone)
-    print("calibrator2",calibrator2.zeroZone)
+    calibrator.criteriaAccuracy = 0.005
+    calibrator.criteriaMaxIterations = 60
+
+

@@ -10,7 +10,6 @@
 *
 """
 
-
 import cv2
 import numpy as np
 
@@ -20,9 +19,127 @@ A module for processing images, including undistorting, cropping, and converting
 This module utilizes OpenCV functions to perform various image processing tasks, which are commonly
 required in computer vision applications.
 """
+def blurImage(image, kernelSize, sigmaX):
+    """
+    Blurs an image using a Gaussian filter.
 
+    Parameters:
+        image (np.ndarray): The image to be blurred.
+        kernelSize (int): The size of the Gaussian kernel.
 
-def brightness_contrast(image, brightness=0, contrast=0):
+    Returns:
+        np.ndarray: The blurred image.
+    """
+    return cv2.GaussianBlur(image, (kernelSize, kernelSize), sigmaX)
+def threshImage(image, thresholdValue, maxValue, thresholdType):
+    """
+    Applies a fixed-level threshold to an image.
+
+    Parameters:
+        image (np.ndarray): The image to be thresholded.
+        thresholdValue (float): The threshold value.
+        maxValue (float): The maximum value to use with the THRESH_BINARY and THRESH_BINARY_INV threshold types.
+        thresholdType (int): The thresholding type.
+
+    Returns:
+        np.ndarray: The thresholded image.
+    """
+    return cv2.threshold(image, thresholdValue, maxValue, thresholdType)[1]
+def perspectiveTransform(image, srcPoints, dstPoints):
+    """
+    Applies a perspective transformation to an image.
+
+    Parameters:
+        image (np.ndarray): The image to be transformed.
+        srcPoints (np.ndarray): The source points.
+        dstPoints (np.ndarray): The destination points.
+
+    Returns:
+        np.ndarray: The transformed image.
+    """
+    rows, cols = image.shape[:2]
+    M = cv2.getPerspectiveTransform(srcPoints, dstPoints)
+    return cv2.warpPerspective(image, M, (cols, rows))
+def grayImage(image):
+    """
+    Converts an image to grayscale.
+
+    Parameters:
+        image (np.ndarray): The image to be converted to grayscale.
+
+    Returns:
+        np.ndarray: The grayscale image.
+    """
+    return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+def cannyImage(image, threshold1, threshold2):
+    """
+    Applies the Canny edge detection algorithm to an image.
+
+    Parameters:
+        image (np.ndarray): The image to be processed.
+        threshold1 (float): The first threshold for the hysteresis procedure.
+        threshold2 (float): The second threshold for the hysteresis procedure.
+
+    Returns:
+        np.ndarray: The edge-detected image.
+    """
+    return cv2.Canny(image, threshold1, threshold2)
+def onesImage(rows, cols):
+    """
+    Creates an image filled with ones.
+
+    Parameters:
+        rows (int): The number of rows in the image.
+        cols (int): The number of columns in the image.
+
+    Returns:
+        np.ndarray: The image filled with ones.
+    """
+    return np.ones((rows, cols), dtype=np.uint8)
+def dilateImage(image, kernel, iterations):
+    """
+    Dilates an image using a specific structuring element.
+
+    Parameters:
+        image (np.ndarray): The image to be dilated.
+        kernel (np.ndarray): The structuring element.
+        iterations (int): The number of iterations.
+
+    Returns:
+        np.ndarray: The dilated image.
+    """
+    return cv2.dilate(image, kernel, iterations=iterations)
+def erodeImage(image, kernel, iterations):
+    """
+    Erodes an image using a specific structuring element.
+
+    Parameters:
+        image (np.ndarray): The image to be eroded.
+        kernel (np.ndarray): The structuring element.
+        iterations (int): The number of iterations.
+
+    Returns:
+        np.ndarray: The eroded image.
+    """
+    return cv2.erode(image, kernel, iterations=iterations)
+def antiAliasImage(image, iterations, kSize, sigmaX, sigmaColor, sigmaSpace):
+    """
+    Applies anti-aliasing to an image.
+
+    Parameters:
+        image (np.ndarray): The image to be anti-aliased.
+        iterations (int): The number of iterations.
+
+    Returns:
+        np.ndarray: The anti-aliased image.
+    """
+    for i in range(iterations):
+        image = cv2.GaussianBlur(image, ksize, sigmaX)
+        image = cv2.medianBlur(image, ksize)
+        image = cv2.bilateralFilter(image, 9, sigmaColor, sigmaSpace)
+    return image
+
+def brightnessContrast(image, brightness=0, contrast=0):
     brightness = int((brightness - 0) * (255 - (-255)) / (510 - 0) + (-255))
     contrast = int((contrast - 0) * (127 - (-127)) / (254 - 0) + (-127))
 
@@ -61,8 +178,6 @@ def applyAffineTransformation(image, xOffset, yOffset, rotationAngle, xScale, yS
 
 
 def undistortImage(image, mtx, dist, imageWidth=1920, imageHeight=1080, crop=False):
-
-
     """
     Undistorts an image given the camera matrix and distortion coefficients.
 
@@ -182,3 +297,6 @@ def zoom(image, scaleFactor, xOffset=0, yOffset=0):
     # Resize back to original dimensions
     zoomedImage = cv2.resize(zoomedRegion, (width, height), interpolation=cv2.INTER_LINEAR)
     return zoomedImage
+
+
+
