@@ -153,7 +153,7 @@ def drawContours(image, contours, contourColor, thickness):
     return image
 
 
-def findContours(image, threshold):
+def findContours(image, threshold, mode):
     """
         Finds contours in an image.
 
@@ -179,7 +179,7 @@ def findContours(image, threshold):
     # inverted_binary = ~binary
 
     # Find contours
-    contours, hierarchy = cv2.findContours(binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_TC89_KCOS)
+    contours, hierarchy = cv2.findContours(binary, mode, cv2.CHAIN_APPROX_TC89_KCOS)
     # contours, hierarchy = cv2.findContours(inverted_binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     return contours, hierarchy
