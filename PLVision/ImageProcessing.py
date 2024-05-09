@@ -44,7 +44,7 @@ def threshImage(image, thresholdValue, maxValue, thresholdType):
     Returns:
         np.ndarray: The thresholded image.
     """
-    return cv2.threshold(image, thresholdValue, maxValue, thresholdType)[1]
+    return cv2.threshold(image, thresholdValue, maxValue, thresholdType)
 def perspectiveTransform(image, srcPoints, dstPoints):
     """
     Applies a perspective transformation to an image.
