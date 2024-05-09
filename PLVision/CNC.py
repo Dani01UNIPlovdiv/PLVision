@@ -5,7 +5,7 @@
 * Revision history:
 * Date       Author      Description
 * -----------------------------------------------------------------
-* 080124     AtD         Initial release
+* 070524     AtD/IlV         Initial release
 * -----------------------------------------------------------------
 *
 """

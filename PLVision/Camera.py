@@ -5,24 +5,20 @@
 * Revision history:
 * Date       Author      Description
 * -----------------------------------------------------------------
-*
+** 070524     AtD/IlV         Initial release
 * -----------------------------------------------------------------
 *
 """
-import datetime  # Import datetime
-import os
-import threading
-import tkinter  # Import tkinter
-from tkinter import Tk  # Import tkinter
 import cv2
 import numpy as np  # Import numpy
+
 
 class Camera:
     """
     A class to represent a camera capture object.
 
     Attributes:
-        camera_index (int): The index of the camera.
+        cameraIndex (int): The index of the camera.
         width (int): The width of the camera feed.
         height (int): The height of the camera feed.
         cap (cv2.VideoCapture): OpenCV video capture object.
@@ -35,66 +31,72 @@ class Camera:
         get_frame_size(): Returns the frame size as a tuple.
     """
 
-    def __init__(self, camera_index, width, height):
+    def __init__(self, cameraIndex, width, height):
         """
         Constructs all the necessary attributes for the camera object.
 
         Parameters:
-            camera_index (int): The index of the camera.
+            cameraIndex (int): The index of the camera.
             width (int): The width of the camera feed.
             height (int): The height of the camera feed.
         """
-        self.set_camera_index(camera_index)
-        self.set_width(width)
-        self.set_height(height)
+        self.setCameraIndex(cameraIndex)
+        self.setWidth(width)
+        self.setHeight(height)
 
-        self.cap = self.init_cap(camera_index, height, width)
+        self.cap = self.initCap(cameraIndex, height, width)
 
-    def init_cap(self, camera_index, height, width):
+    def initCap(self, cameraIndex, height, width):
         """
         Initializes the camera capture object with specified index, width, and height.
 
         Parameters:
-            camera_index (int): The index of the camera.
+            cameraIndex (int): The index of the camera.
             height (int): The height to set for the camera feed.
             width (int): The width to set for the camera feed.
 
         Returns:
             cv2.VideoCapture: The initialized camera capture object.
         """
-        cap = cv2.VideoCapture(camera_index)
+        cap = cv2.VideoCapture(cameraIndex)
         cap.set(3, width)  # cv2.CAP_PROP_FRAME_WIDTH
         cap.set(4, height)  # cv2.CAP_PROP_FRAME_HEIGHT
         return cap
 
-    def set_camera_index(self, value):
+    def setCameraIndex(self, value):
         """
         Validates and sets the camera index.
 
         Parameters:
             value (int): The index of the camera to be set.
         """
-        self.camera_index = value
+        if value < 0:
+            raise ValueError(f"camera index can not be negative -> {value}")
+        self.cameraIndex = value
 
-    def set_width(self, value):
+    def setWidth(self, value):
         """
         Validates and sets the width of the camera feed.
 
         Parameters:
             value (int): The width to be set for the camera feed.
         """
+        if value < 0:
+            raise ValueError(f"width can not be negative -> {value}")
         self.width = value
 
-    def set_height(self, value):
+    def setHeight(self, value):
         """
         Validates and sets the height of the camera feed.
 
         Parameters:
             value (int): The height to be set for the camera feed.
         """
+        if value < 0:
+            raise ValueError(f"height can not be negative -> {value}")
         self.height = value
 
-    def get_frame_size(self):
+    def getFrameSize(self):
         """
         Returns the current frame size.
 
@@ -102,12 +104,27 @@ class Camera:
             tuple: The width and height of the camera feed.
         """
         return self.width, self.height
+
     def capture(self):
         """
-        Captures a frame from the camera feed.
+           Captures a single frame from the camera feed.
 
-        Returns:
-            tuple: A tuple containing the return value and the frame.
-        """
-        ret,frame = self.cap.read()
+           Returns:
+               np.ndarray: The captured frame as a NumPy array, or None if the frame could not be captured.
+           """
+        ret, frame = self.cap.read()
         return frame
+
+    def stopCapture(self):
+        self.cap.release()
+
+
+if __name__ == "__main__":
+
+    camera = Camera(cameraIndex=0, width=1920, height=1080)
+    frame = camera.capture()
+    if frame is None:
+        print("Frame capture failed")
+    else:
+        print("Frame captured successfully ")
+
