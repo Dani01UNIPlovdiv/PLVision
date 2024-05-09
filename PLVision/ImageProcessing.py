@@ -45,7 +45,7 @@ def threshImage(image, thresholdValue, maxValue, thresholdType):
         np.ndarray: The thresholded image.
     """
     return cv2.threshold(image, thresholdValue, maxValue, thresholdType)
-def perspectiveTransform(image, srcPoints, dstPoints):
+def perspectiveTransform(image, srcPoints, dstPoints, calibration_file):
     """
     Applies a perspective transformation to an image.
 
@@ -53,10 +53,19 @@ def perspectiveTransform(image, srcPoints, dstPoints):
         image (np.ndarray): The image to be transformed.
         srcPoints (np.ndarray): The source points.
         dstPoints (np.ndarray): The destination points.
+        calibration_file (str): The path to the calibration file.
 
     Returns:
         np.ndarray: The transformed image.
     """
+    # Load the calibration data
+    with np.load(calibration_file) as X:
+        mtx, dist = [X[i] for i in ('mtx', 'dist')]
+
+    # Undistort the image
+    image = cv2.undistort(image, mtx, dist, None, mtx)
+
+    # Apply the perspective transform
     rows, cols = image.shape[:2]
     M = cv2.getPerspectiveTransform(srcPoints, dstPoints)
     return cv2.warpPerspective(image, M, (cols, rows))
@@ -83,6 +92,14 @@ def cannyImage(image, threshold1, threshold2):
     Returns:
         np.ndarray: The edge-detected image.
     """
+    # Check if image is a numpy array
+    if not isinstance(image, np.ndarray):
+        raise ValueError("Image should be a numpy array")
+
+    # Check if both thresholds are provided
+    if threshold1 is None or threshold2 is None:
+        raise ValueError("Both threshold1 and threshold2 should be provided")
+
     return cv2.Canny(image, threshold1, threshold2)
 def onesImage(rows, cols):
     """
