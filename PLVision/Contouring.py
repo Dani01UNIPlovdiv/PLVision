@@ -150,7 +150,7 @@ def drawContours(image, contours, contourColor, thickness, lineType):
     return image
 
 
-def findContours(image, kSize, sigmaX, threshold, mode, maxval, type, method, edged=None, kernel=None):
+def findContours(image, kSize, sigmaX, threshold, maxval, type, mode, method, edged=None, kernel=None):
     """
         Finds contours in an image.
 
