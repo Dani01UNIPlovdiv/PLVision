@@ -176,7 +176,7 @@ def findContours(image, mode, method):
     # inverted_binary = ~binary
 
     # Find contours
-    contours, hierarchy = cv2.findContours(binary, mode, method)
+    contours, hierarchy = cv2.findContours(image, mode, method)
     # contours, hierarchy = cv2.findContours(inverted_binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     return contours, hierarchy
