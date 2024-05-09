@@ -101,7 +101,7 @@ def translateContourAndChildren(contours, hierarchy, xOffset, yOffset, parentInd
         Note:
             This function modifies the input contours in place.
     """
-    childIndices = []
+    childIndices = [] # List to store indices of child contours
 
     # If parent_index is not provided, start from the root of the hierarchy
     if parentIndex is None:
@@ -114,15 +114,15 @@ def translateContourAndChildren(contours, hierarchy, xOffset, yOffset, parentInd
     childIndex = hierarchy[0][parentIndex][2]
 
     # Recursively translate child contours and collect child indices
-    while childIndex != -1:
-        childIndices.append(childIndex)
-        childIndices.extend(translateContourAndChildren(contours, hierarchy, xOffset, yOffset, childIndex))
+    while childIndex != -1: # While there are children
+        childIndices.append(childIndex) # Collect child index
+        childIndices.extend(translateContourAndChildren(contours, hierarchy, xOffset, yOffset, childIndex)) # Recursively translate children
         childIndex = hierarchy[0][childIndex][0]  # Get the next sibling index
 
     return childIndices
 
 
-def drawContours(image, contours, contourColor, thickness):
+def drawContours(image, contours, contourColor, thickness, lineType):
     """
        Draws contours on an image.
 
@@ -145,15 +145,12 @@ def drawContours(image, contours, contourColor, thickness):
         if index == 0:
             index = 1
             continue
-        # area = cv2.contourArea(contour)
-        # if area > 100:
-        # Draw contours
-        cv2.drawContours(image, [contour], -1, contourColor, thickness, cv2.LINE_AA)
+        cv2.drawContours(image, [contour], -1, contourColor, thickness, lineType) # Draw the contour
 
     return image
 
 
-def findContours(image, kSize, sigmaX, threshold, mode, maxval, type, method):
+def findContours(image, kSize, sigmaX, threshold, mode, maxval, type, method, edged=None, kernel=None):
     """
         Finds contours in an image.
 
@@ -170,7 +167,10 @@ def findContours(image, kSize, sigmaX, threshold, mode, maxval, type, method):
         grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     else:
         grayImage = image  # Assuming the image is already in grayscale
-
+    if edged is not none:
+        edgedImage = cv2.Canny(grayImage, edged[0], edged[1])  # Apply Canny edge detection
+    if kernel is not none:
+        kernelImage = np.ones(kernel[0], np.uint8)  # Create kernel
     # Apply Gaussian blur
     bluredImage = cv2.GaussianBlur(grayImage, kSize, sigmaX)
     # Apply binary inversion thresholding
@@ -179,8 +179,7 @@ def findContours(image, kSize, sigmaX, threshold, mode, maxval, type, method):
     # inverted_binary = ~binary
 
     # Find contours
-    contours, hierarchy = cv2.findContours(binary, mode, method) #cv2.CHAIN_APPROX_TC89_KCOS
-    # contours, hierarchy = cv2.findContours(inverted_binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours, hierarchy = cv2.findContours(binary, mode, method)
 
     return contours, hierarchy
 
