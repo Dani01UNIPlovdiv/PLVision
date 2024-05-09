@@ -122,7 +122,7 @@ def translateContourAndChildren(contours, hierarchy, xOffset, yOffset, parentInd
     return childIndices
 
 
-def drawContours(image, contours, contourColor, thickness, lineType):
+def drawContours(image, contours, contourColor, thickness):
     """
        Draws contours on an image.
 
@@ -145,7 +145,7 @@ def drawContours(image, contours, contourColor, thickness, lineType):
         if index == 0:
             index = 1
             continue
-        cv2.drawContours(image, [contour], -1, contourColor, thickness, lineType) # Draw the contour
+        cv2.drawContours(image, [contour], -1, contourColor, thickness) # Draw the contour
 
     return image
 
