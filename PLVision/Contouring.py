@@ -153,7 +153,7 @@ def drawContours(image, contours, contourColor, thickness):
     return image
 
 
-def findContours(image, threshold, mode):
+def findContours(image, threshold, mode, maxval, type):
     """
         Finds contours in an image.
 
@@ -174,7 +174,7 @@ def findContours(image, threshold, mode):
     # Apply Gaussian blur
     bluredImage = cv2.GaussianBlur(grayImage, (5, 5), 0)
     # Apply binary inversion thresholding
-    _, binary = cv2.threshold(bluredImage, threshold, 255, cv2.THRESH_OTSU)
+    _, binary = cv2.threshold(bluredImage, threshold, maxval, type)
 
     # inverted_binary = ~binary
 
