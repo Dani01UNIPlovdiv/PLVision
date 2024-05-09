@@ -167,9 +167,9 @@ def findContours(image, kSize, sigmaX, threshold, mode, maxval, type, method, ed
         grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     else:
         grayImage = image  # Assuming the image is already in grayscale
-    if edged is not none:
+    if edged is not None:
         edgedImage = cv2.Canny(grayImage, edged[0], edged[1])  # Apply Canny edge detection
-    if kernel is not none:
+    if kernel is not None:
         kernelImage = np.ones(kernel[0], np.uint8)  # Create kernel
     # Apply Gaussian blur
     bluredImage = cv2.GaussianBlur(grayImage, kSize, sigmaX)
