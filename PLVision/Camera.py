@@ -118,3 +118,14 @@ class Camera:
     def stopCapture(self):
         self.cap.release()
 
+
+if __name__ == "__main__":
+
+    camera = Camera(cameraIndex=0, width=1920, height=1080)
+    frame = camera.capture()
+    if frame is None:
+        print("Frame capture failed")
+    else:
+        print("Frame captured successfully ")
+    camera.stopCapture()
+

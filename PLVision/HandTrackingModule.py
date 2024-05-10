@@ -16,13 +16,15 @@ class HandDetector:
         A class to detect hands in a video frame using MediaPipe Hands.
 
         Attributes:
-            mode (bool): Whether to treat the input images as a batch of static and possibly unrelated images, or a stream of images where the hand presence and positioning is more predictable. Default is False.
+            mode (Modes): Whether to treat the input images as a batch of static and possibly unrelated images, or a stream of images where the hand presence and positioning is more predictable. Default is False.
             maxHands (int): Maximum number of hands to detect. Default is 2.
             detectionCon (float): Minimum confidence value ([0.0, 1.0]) for hand detection to be considered successful. Default is 1.
             trackCon (float): Minimum confidence value ([0.0, 1.0]) for the hand landmarks to be considered tracked successfully. Default is 0.5.
     """
 
     def __init__(self, mode=Modes.LIVE_STREAM, maxHands=1, detectionCon=1, trackCon=0.5):  # constructor
+        self.results = None
+        self.lmList = None
         self.mode = mode
         self.maxHands = maxHands
         self.detectionCon = detectionCon
@@ -33,25 +35,25 @@ class HandDetector:
         self.mpDraw = mp.solutions.drawing_utils  # object for Drawing
         self.tipIds = [4, 8, 12, 16, 20]
 
-    def findHands(self, img, draw=True):
+    def findHands(self, image, draw=True):
         """
             Finds hands in an image.
 
             Args:
-                img: The image in which to detect hands.
+                image: The image in which to detect hands.
                 draw (bool): Whether to draw the detection results on the image.
 
             Returns:
                 The image with or without drawings.
         """
-        imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # converting to RGB bcoz hand recognition works only on RGB image
+        imgRGB = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)  # converting to RGB bcoz hand recognition works only on RGB image
         self.results = self.hands.process(imgRGB)  # processing the RGB image
         if self.results.multi_hand_landmarks:  # gives x,y,z of every landmark or if no hand than NONE
             for handLms in self.results.multi_hand_landmarks:  # each hand landmarks in results
                 if draw:
-                    self.mpDraw.draw_landmarks(img, handLms,
+                    self.mpDraw.draw_landmarks(image, handLms,
                                                self.mpHands.HAND_CONNECTIONS)  # joining points on our hand
-        return img
+        return image
 
     def findPosition(self, img, handNo=0, draw=True):
         """
@@ -70,7 +72,7 @@ class HandDetector:
         yList = []
         zList = []
         bbox = []
-        self.lmlist = []
+        self.lmList = []
         if self.results.multi_hand_landmarks:  # gives x,y,z of every landmark
             myHand = self.results.multi_hand_landmarks[handNo]  # Gives result for particular hand
             for id, lm in enumerate(myHand.landmark):  # gives id and lm(x,y,z)
@@ -80,7 +82,7 @@ class HandDetector:
                 xList.append(cx)
                 yList.append(cy)
                 zList.append(cz)
-                self.lmlist.append([id, cx, cy, cz])
+                self.lmList.append([id, cx, cy, cz])
                 # if draw:
                 #     cv2.circle(img, (cx, cy), 5, (255, 0, 255), cv2.FILLED)
             xmin, xmax = min(xList), max(xList)
@@ -90,14 +92,25 @@ class HandDetector:
             if draw:
                 cv2.rectangle(img, (bbox[0] - 20, bbox[1] - 20), (bbox[2] + 20, bbox[3] + 20), (0, 255, 0), 2)
 
-        return self.lmlist, bbox
+        return self.lmList, bbox
 
     def fingersUp(self):
+        """
+                Определя дали пръстът е изправен (отворен) или сгънат (затворен).
+
+                Връща:
+                    Списък с булеви стойности, където всяка стойност представлява отворен (1) или затворен (0) пръст:
+                    - Първият елемент отговаря на показалеца.
+                    - Вторият елемент отговаря на средния пръст.
+                    - Третият елемент отговаря на пръстът "халка".
+                    - Четвъртият елемент отговаря на малкия пръст.
+                    - Петият елемент отговаря на палеца.
+                """
         fingers = []  # Storing final result
 
         # Detecting thumb
-        thumb_angle = self.calculateAngle(self.lmlist[self.tipIds[0]], self.lmlist[self.tipIds[0] - 2],
-                                          self.lmlist[self.tipIds[0] - 4])
+        thumb_angle = self.calculateAngle(self.lmList[self.tipIds[0]], self.lmList[self.tipIds[0] - 2],
+                                          self.lmList[self.tipIds[0] - 4])
         if thumb_angle > 160:  # Adjust this threshold as needed
             fingers.append(1)  # Thumb is open
         else:
@@ -105,7 +118,7 @@ class HandDetector:
 
         # Detecting fingers
         for id in range(1, 5):  # Checking fingers 1 to 4
-            if self.lmlist[self.tipIds[id]][2] < self.lmlist[self.tipIds[id] - 2][2]:
+            if self.lmList[self.tipIds[id]][2] < self.lmList[self.tipIds[id] - 2][2]:
                 fingers.append(1)  # Finger is open
             else:
                 fingers.append(0)  # Finger is closed
@@ -119,8 +132,8 @@ class HandDetector:
            Returns:
                True if the thumb is considered open, False otherwise.
        """
-        thumb_angle = self.calculateAngle(self.lmlist[self.tipIds[0]], self.lmlist[self.tipIds[0] - 2],
-                                          self.lmlist[self.tipIds[0] - 4])
+        thumb_angle = self.calculateAngle(self.lmList[self.tipIds[0]], self.lmList[self.tipIds[0] - 2],
+                                          self.lmList[self.tipIds[0] - 4])
         return thumb_angle > 160  # Adjust this threshold as needed
 
     def isFingerOpen(self, finger_id):
@@ -133,8 +146,8 @@ class HandDetector:
            Returns:
                True if the finger is considered open, False otherwise.
        """
-        finger_tip = self.lmlist[finger_id]
-        finger_base = self.lmlist[finger_id - 1]
+        finger_tip = self.lmList[finger_id]
+        finger_base = self.lmList[finger_id - 1]
         return finger_tip[2] < finger_base[2]  # Check if finger tip is above finger base
 
     def calculateAngle(self, point1, point2, point3):
@@ -168,8 +181,8 @@ class HandDetector:
             Returns:
                 A tuple containing the distance between the points, the image, and the coordinates of the points.
         """
-        x1, y1 = self.lmlist[p1][1], self.lmlist[p1][2]  # getting x,y of p1
-        x2, y2 = self.lmlist[p2][1], self.lmlist[p2][2]  # getting x,y of p2
+        x1, y1 = self.lmList[p1][1], self.lmList[p1][2]  # getting x,y of p1
+        x2, y2 = self.lmList[p2][1], self.lmList[p2][2]  # getting x,y of p2
         cx, cy = (x1 + x2) // 2, (y1 + y2) // 2  # getting centre point
 
         if draw:  # drawing line and circles on the points

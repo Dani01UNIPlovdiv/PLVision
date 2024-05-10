@@ -19,6 +19,8 @@ A module for processing images, including undistorting, cropping, and converting
 This module utilizes OpenCV functions to perform various image processing tasks, which are commonly
 required in computer vision applications.
 """
+
+
 def blurImage(image, kernelSize, sigmaX):
     """
     Blurs an image using a Gaussian filter.
@@ -31,6 +33,8 @@ def blurImage(image, kernelSize, sigmaX):
         np.ndarray: The blurred image.
     """
     return cv2.GaussianBlur(image, (kernelSize, kernelSize), sigmaX)
+
+
 def threshImage(image, thresholdValue, maxValue, thresholdType):
     """
     Applies a fixed-level threshold to an image.
@@ -45,6 +49,8 @@ def threshImage(image, thresholdValue, maxValue, thresholdType):
         np.ndarray: The thresholded image.
     """
     return cv2.threshold(image, thresholdValue, maxValue, thresholdType)
+
+
 def perspectiveTransform(image, srcPoints, dstPoints, calibration_file):
     """
     Applies a perspective transformation to an image.
@@ -69,6 +75,8 @@ def perspectiveTransform(image, srcPoints, dstPoints, calibration_file):
     rows, cols = image.shape[:2]
     M = cv2.getPerspectiveTransform(srcPoints, dstPoints)
     return cv2.warpPerspective(image, M, (cols, rows))
+
+
 def grayImage(image):
     """
     Converts an image to grayscale.
@@ -80,6 +88,8 @@ def grayImage(image):
         np.ndarray: The grayscale image.
     """
     return cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+
+
 def cannyImage(image, threshold1, threshold2):
     """
     Applies the Canny edge detection algorithm to an image.
@@ -101,6 +111,8 @@ def cannyImage(image, threshold1, threshold2):
         raise ValueError("Both threshold1 and threshold2 should be provided")
 
     return cv2.Canny(image, threshold1, threshold2)
+
+
 def onesImage(rows, cols):
     """
     Creates an image filled with ones.
@@ -113,6 +125,8 @@ def onesImage(rows, cols):
         np.ndarray: The image filled with ones.
     """
     return np.ones((rows, cols), dtype=np.uint8)
+
+
 def dilateImage(image, kernel, iterations):
     """
     Dilates an image using a specific structuring element.
@@ -126,6 +140,8 @@ def dilateImage(image, kernel, iterations):
         np.ndarray: The dilated image.
     """
     return cv2.dilate(image, kernel, iterations=iterations)
+
+
 def erodeImage(image, kernel, iterations):
     """
     Erodes an image using a specific structuring element.
@@ -139,6 +155,8 @@ def erodeImage(image, kernel, iterations):
         np.ndarray: The eroded image.
     """
     return cv2.erode(image, kernel, iterations=iterations)
+
+
 def antiAliasImage(image, iterations, kSize, sigmaX, sigmaColor, sigmaSpace):
     """
     Applies anti-aliasing to an image.
@@ -151,10 +169,11 @@ def antiAliasImage(image, iterations, kSize, sigmaX, sigmaColor, sigmaSpace):
         np.ndarray: The anti-aliased image.
     """
     for i in range(iterations):
-        image = cv2.GaussianBlur(image, ksize, sigmaX)
-        image = cv2.medianBlur(image, ksize)
+        image = cv2.GaussianBlur(image, kSize, sigmaX)
+        image = cv2.medianBlur(image, kSize)
         image = cv2.bilateralFilter(image, 9, sigmaColor, sigmaSpace)
     return image
+
 
 def brightnessContrast(image, brightness=0, contrast=0):
     brightness = int((brightness - 0) * (255 - (-255)) / (510 - 0) + (-255))
@@ -199,6 +218,8 @@ def undistortImage(image, mtx, dist, imageWidth=1920, imageHeight=1080, crop=Fal
     Undistorts an image given the camera matrix and distortion coefficients.
 
     Parameters:
+        imageHeight:
+        imageWidth:
         crop:
         image (np.ndarray): The distorted image to be undistorted.
         mtx (np.ndarray): The camera matrix.
@@ -249,6 +270,8 @@ def cropImage(image, leftCrop=0, rightCrop=0, topCrop=0, bottomCrop=0, pad=True)
         This function validates the crop values to ensure they are positive integers
         before performing the crop and pad operations.
     """
+    if leftCrop < 0 or rightCrop < 0 or topCrop < 0 or bottomCrop < 0:
+        raise ValueError("Crop values should be positive integers")
 
     height, width = image.shape[:2]
     croppedImage = image[topCrop:height - bottomCrop, leftCrop:width - rightCrop]
@@ -314,6 +337,3 @@ def zoom(image, scaleFactor, xOffset=0, yOffset=0):
     # Resize back to original dimensions
     zoomedImage = cv2.resize(zoomedRegion, (width, height), interpolation=cv2.INTER_LINEAR)
     return zoomedImage
-
-
-

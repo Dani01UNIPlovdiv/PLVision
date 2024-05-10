@@ -155,29 +155,16 @@ def findContours(image, mode, method):
         Finds contours in an image.
 
         Parameters:
-            threshold:
+            mode:
+            method:
             image (np.ndarray): The input image.
 
         Returns:
             tuple: A tuple containing a list of contours and their hierarchy.
     """
 
-    # Convert the image to grayscale if it's not already
-    #if len(image.shape) == 3:  # Color image
-        #grayImage = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    #else:
-        #grayImage = image  # Assuming the image is already in grayscale
-
-    # Apply Gaussian blur
-    #bluredImage = cv2.GaussianBlur(grayImage, (5, 5), 0)
-    # Apply binary inversion thresholding
-    #_, binary = cv2.threshold(bluredImage, threshold, 255, cv2.THRESH_OTSU)
-
-    # inverted_binary = ~binary
-
     # Find contours
     contours, hierarchy = cv2.findContours(image, mode, method)
-    # contours, hierarchy = cv2.findContours(inverted_binary, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
 
     return contours, hierarchy
 
@@ -248,10 +235,6 @@ def rotateContourAndChildren(contours, hierarchy, angle):
     for i in range(len(contours)):
         if hierarchy[0][i][3] == -1:  # If contour has no parent
             # Calculate centroid of the top-level contour to use as a pivot
-            # M = cv2.moments(contours[i])
-            # if M["m00"] != 0:
-            #     cx = int(M["m10"] / M["m00"])
-            #     cy = int(M["m01"] / M["m00"])
             pivot = calculateCentroid(contours[1])
             rotateRecursive(i, pivot)
 

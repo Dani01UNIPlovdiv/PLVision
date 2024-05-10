@@ -177,7 +177,7 @@ class CameraCalibrator:
            Returns:
                float: The mean error across all calibration images.
        """
-        meanError = 0
+        meanError = 0.0
         for i in range(len(self.objpoints)):
             imgpoints2, _ = cv2.projectPoints(self.objpoints[i], rvecs[i], tvecs[i], mtx, dist)
             error = cv2.norm(self.imgpoints[i], imgpoints2, cv2.NORM_L2) / len(imgpoints2)
@@ -195,7 +195,9 @@ class CameraCalibrator:
                 path: (str) Path to the directory where the calibration data is saved
         """
 
-        np.savez(path + "camera_calibration.npz", mtx=mtx, dist=dist, ppm=ppm)
+        import os
+        filename = os.path.join(path, "camera_calibration.npz")
+        np.savez(filename, mtx=mtx, dist=dist, ppm=ppm)
 
     def performCameraCalibration(self, image, path):
         """
