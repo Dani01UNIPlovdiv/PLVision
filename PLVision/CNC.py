@@ -16,17 +16,9 @@ import threading
 import cv2  # Import OpenCV
 import linuxcnc
 import numpy as np  # Import numpy
+from PLVision.Contouring import *
 
-def GenerateGCode(offset_x=0, offset_y=0):
-    file = FileSelector.getRecentFile()
-    image = cv2.imread(file)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    edged = cv2.Canny(gray, 10, 200)
-    kernel = np.ones((5,5), np.uint8)
-    edged = cv2.dilate(edged, kernel, iterations=1)
-    kernel = np.ones((5,5), np.uint8)
-    edged = cv2.erode(edged, kernel, iterations=1)
-    contours, hierarchy = cv2.findContours(edged, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_SIMPLE)
+def GenerateGCode(contours, hierarchy, offset_x=0, offset_y=0):
     min_contour_area = 100  # Set your minimum contour area
     contours = [cnt for cnt, h in zip(contours, hierarchy[0]) if cv2.contourArea(cnt) > min_contour_area and h[3] == -1]
     f=open("storage/image.ngc", "w")
