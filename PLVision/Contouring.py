@@ -139,12 +139,12 @@ def drawContours(image, contours, contourColor, thickness):
            ValueError: If thickness is not a positive integer.
     """
 
-    contours = sorted(contours, key=cv2.contourArea, reverse=True)
+    # contours = sorted(contours, key=cv2.contourArea, reverse=True)
     index = 0
     for contour in contours:
-        if index == 0:
-            index = 1
-            continue
+        # if index == 0:
+        #     index = 1
+        #     continue
         cv2.drawContours(image, [contour], -1, contourColor, thickness, cv2.LINE_AA)
 
     return image
