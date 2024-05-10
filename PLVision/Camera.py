@@ -44,9 +44,9 @@ class Camera:
         # self.setWidth(width)
         # self.setHeight(height)
 
-        cap = cv2.VideoCapture(cameraIndex)
-        cap.set(3, width)  # cv2.CAP_PROP_FRAME_WIDTH
-        cap.set(4, height)  # cv2.CAP_PROP_FRAME_HEIGHT
+        self.cap = cv2.VideoCapture(cameraIndex)
+        self.cap.set(3, width)  # cv2.CAP_PROP_FRAME_WIDTH
+        self.cap.set(4, height)  # cv2.CAP_PROP_FRAME_HEIGHT
 
         # self.cap = self.initCap(cameraIndex, height, width)
 
