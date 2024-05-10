@@ -11,6 +11,7 @@
 """
 import cv2
 import numpy as np  # Import numpy
+import time
 
 
 class Camera:
