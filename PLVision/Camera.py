@@ -47,8 +47,8 @@ class Camera:
         self.height = height
 
         self.cap = cv2.VideoCapture(self.cameraIndex)
-        self.cap.set(3, self.width)  # cv2.CAP_PROP_FRAME_WIDTH
-        self.cap.set(4, self.height)  # cv2.CAP_PROP_FRAME_HEIGHT
+        self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, self.width)
+        self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, self.height)
         end_time = time.time()
         print(f"__init__ method took {end_time - start_time} seconds to run")
 
