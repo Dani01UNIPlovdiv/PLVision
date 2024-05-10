@@ -167,8 +167,6 @@ def findContours(image, mode, method):
     contours, hierarchy = cv2.findContours(image, mode, method)
 
     return contours, hierarchy
-
-
 def rotateContour(contour, angle, pivot):
     """
     Rotates a single contour around a pivot point.
