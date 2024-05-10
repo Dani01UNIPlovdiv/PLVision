@@ -40,6 +40,7 @@ class Camera:
             width (int): The width of the camera feed.
             height (int): The height of the camera feed.
         """
+        start_time = time.time()
         self.cameraIndex = cameraIndex
         self.width = width
         self.height = height
@@ -47,6 +48,8 @@ class Camera:
         self.cap = cv2.VideoCapture(self.cameraIndex)
         self.cap.set(3, self.width)  # cv2.CAP_PROP_FRAME_WIDTH
         self.cap.set(4, self.height)  # cv2.CAP_PROP_FRAME_HEIGHT
+        end_time = time.time()
+        print(f"__init__ method took {end_time - start_time} seconds to run")
 
     def capture(self):
         """
@@ -55,7 +58,9 @@ class Camera:
            Returns:
                np.ndarray: The captured frame as a NumPy array, or None if the frame could not be captured.
            """
+        start_time = time.time()
         ret, frame = self.cap.read()
+        print(f"capture method took {end_time - start_time} seconds to run")
         return frame
 
     def stopCapture(self):
