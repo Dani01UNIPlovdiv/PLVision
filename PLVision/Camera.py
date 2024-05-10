@@ -61,6 +61,7 @@ class Camera:
            """
         start_time = time.time()
         ret, frame = self.cap.read()
+        end_time = time.time()
         print(f"capture method took {end_time - start_time} seconds to run")
         return frame
 
