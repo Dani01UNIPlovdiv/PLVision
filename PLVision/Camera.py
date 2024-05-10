@@ -11,7 +11,6 @@
 """
 import cv2
 import numpy as np  # Import numpy
-import time
 
 
 class Camera:
@@ -41,16 +40,70 @@ class Camera:
             width (int): The width of the camera feed.
             height (int): The height of the camera feed.
         """
-        start_time = time.time()
-        self.cameraIndex = cameraIndex
-        self.width = width
-        self.height = height
+        self.setCameraIndex(cameraIndex)
+        self.setWidth(width)
+        self.setHeight(height)
 
-        self.cap = cv2.VideoCapture(self.cameraIndex)
-        self.cap.set(3, self.width)  # cv2.CAP_PROP_FRAME_WIDTH
-        self.cap.set(4, self.height)  # cv2.CAP_PROP_FRAME_HEIGHT
-        end_time = time.time()
-        print(f"__init__ method took {end_time - start_time} seconds to run")
+        self.cap = self.initCap(cameraIndex, height, width)
+
+    def initCap(self, cameraIndex, height, width):
+        """
+        Initializes the camera capture object with specified index, width, and height.
+
+        Parameters:
+            cameraIndex (int): The index of the camera.
+            height (int): The height to set for the camera feed.
+            width (int): The width to set for the camera feed.
+
+        Returns:
+            cv2.VideoCapture: The initialized camera capture object.
+        """
+        cap = cv2.VideoCapture(cameraIndex)
+        cap.set(3, width)  # cv2.CAP_PROP_FRAME_WIDTH
+        cap.set(4, height)  # cv2.CAP_PROP_FRAME_HEIGHT
+        return cap
+
+    def setCameraIndex(self, value):
+        """
+        Validates and sets the camera index.
+
+        Parameters:
+            value (int): The index of the camera to be set.
+        """
+        if value < 0:
+            raise ValueError(f"camera index can not be negative -> {value}")
+        self.cameraIndex = value
+
+    def setWidth(self, value):
+        """
+        Validates and sets the width of the camera feed.
+
+        Parameters:
+            value (int): The width to be set for the camera feed.
+        """
+        if value < 0:
+            raise ValueError(f"width can not be negative -> {value}")
+        self.width = value
+
+    def setHeight(self, value):
+        """
+        Validates and sets the height of the camera feed.
+
+        Parameters:
+            value (int): The height to be set for the camera feed.
+        """
+        if value < 0:
+            raise ValueError(f"height can not be negative -> {value}")
+        self.height = value
+
+    def getFrameSize(self):
+        """
+        Returns the current frame size.
+
+        Returns:
+            tuple: The width and height of the camera feed.
+        """
+        return self.width, self.height
 
     def capture(self):
         """
@@ -59,11 +112,20 @@ class Camera:
            Returns:
                np.ndarray: The captured frame as a NumPy array, or None if the frame could not be captured.
            """
-        start_time = time.time()
         ret, frame = self.cap.read()
-        end_time = time.time()
-        print(f"capture method took {end_time - start_time} seconds to run")
         return frame
 
     def stopCapture(self):
         self.cap.release()
+
+
+if __name__ == "__main__":
+
+    camera = Camera(cameraIndex=0, width=1920, height=1080)
+    frame = camera.capture()
+    if frame is None:
+        print("Frame capture failed")
+    else:
+        print("Frame captured successfully ")
+    camera.stopCapture()
+
