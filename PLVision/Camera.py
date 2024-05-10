@@ -40,15 +40,11 @@ class Camera:
             width (int): The width of the camera feed.
             height (int): The height of the camera feed.
         """
-        # self.setCameraIndex(cameraIndex)
-        # self.setWidth(width)
-        # self.setHeight(height)
+        self.setCameraIndex(cameraIndex)
+        self.setWidth(width)
+        self.setHeight(height)
 
-        self.cap = cv2.VideoCapture(cameraIndex)
-        self.cap.set(3, width)  # cv2.CAP_PROP_FRAME_WIDTH
-        self.cap.set(4, height)  # cv2.CAP_PROP_FRAME_HEIGHT
-
-        # self.cap = self.initCap(cameraIndex, height, width)
+        self.cap = self.initCap(cameraIndex, height, width)
 
     def initCap(self, cameraIndex, height, width):
         """
