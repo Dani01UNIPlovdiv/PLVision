@@ -1,3 +1,15 @@
+"""
+* File: JsonHandler.py
+* Author: IlV
+* Comments:
+* Revision history:
+* Date       Author      Description
+* -----------------------------------------------------------------
+** 130524     IlV         Initial release
+* -----------------------------------------------------------------
+*
+"""
+
 import json
 
 
