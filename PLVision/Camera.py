@@ -58,7 +58,7 @@ class Camera:
         Returns:
             cv2.VideoCapture: The initialized camera capture object.
         """
-        cap = cv2.VideoCapture(cameraIndex, cv2.CAP_DSHOW)
+        cap = cv2.VideoCapture(cameraIndex)
         cap.set(3, width)  # cv2.CAP_PROP_FRAME_WIDTH
         cap.set(4, height)  # cv2.CAP_PROP_FRAME_HEIGHT
         return cap
