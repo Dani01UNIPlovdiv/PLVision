@@ -13,6 +13,7 @@ import cv2  # Import OpenCV
 import numpy as np  # Import numpy
 
 from PLVision.Camera import Camera
+import os
 
 
 class CameraCalibrator:
@@ -97,7 +98,7 @@ class CameraCalibrator:
         # define the criteria to stop. We stop it after a specified number of iterations
         # or a certain accuracy is achieved, whichever occurs first.
         criteria = (
-        cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, self.criteriaMaxIterations, self.criteriaMaxIterations)
+            cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, self.criteriaMaxIterations, self.criteriaMaxIterations)
         # Refine corner points
         return cv2.cornerSubPix(gray, corners, self.winZone, self.zeroZone, criteria)
 
@@ -195,7 +196,6 @@ class CameraCalibrator:
                 path: (str) Path to the directory where the calibration data is saved
         """
 
-        import os
         filename = os.path.join(path, "camera_calibration.npz")
         np.savez(filename, mtx=mtx, dist=dist, ppm=ppm)
 
@@ -257,5 +257,3 @@ if __name__ == "__main__":
     calibrator.zeroZone = (-2, -2)
     calibrator.criteriaAccuracy = 0.005
     calibrator.criteriaMaxIterations = 60
-
-

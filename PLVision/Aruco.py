@@ -1,18 +1,18 @@
 import cv2
 
 
-def get_corners(image, arucoIds):
+def get_corners(image, arucoIds, maxAttempts=10):
     aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_6X6_250)
     parameters = cv2.aruco.DetectorParameters()
 
-    count = 10
+    maxAttempts = maxAttempts
     found_markers = 0
     ids = None
     bboxes = None
     corners = [None, None, None, None]
     # FIND THE PROJECTION SCREEN COORDS
     while True:
-        while count > 0 and found_markers < 4:
+        while maxAttempts > 0 and found_markers < len(arucoIds):
             detection_results = cv2.aruco.detectMarkers(image, aruco_dict, parameters=parameters)
             bboxes, ids, _ = detection_results
             if ids is None:
@@ -21,7 +21,7 @@ def get_corners(image, arucoIds):
                 if idx in arucoIds:
                     found_markers += 1
                     print("Marker found", idx)
-            count -= 1
+            maxAttempts -= 1
 
         all_detected = True
         for idx in arucoIds:

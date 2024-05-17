@@ -71,7 +71,7 @@ class ArucoDetector:
         self.arucoDict = arucoDict
         self.parameters = parameters
 
-    def detect_all(self, image):
+    def detectAll(self, image):
         """
         Detects the specified ArUco markers in the given image.
 
@@ -96,18 +96,20 @@ class ArucoDetector:
         # Return the corners and IDs of the detected markers
         return corners, ids
 
-    def detect_area_corners(self, image, arucoIds, maxAttempts=10):
+    def detectAreaCorners(self, image, arucoIds, maxAttempts=10):
         """
-        Detects the specified ArUco markers in the given image.
+           Detects the specified ArUco markers in the given image.
 
-        Parameters:
-        image (np.ndarray): The image in which to detect ArUco markers.
+           Parameters:
+           image (np.ndarray): The image in which to detect ArUco markers.
+           arucoIds (list): A list of IDs of the ArUco markers to be detected. Must contain exactly 4 IDs.
+           maxAttempts (int): The maximum number of attempts to detect the markers.
 
-        Returns:
-        list, list:
-            A list of corners of the detected ArUco markers, and a list of their IDs.
-            Returns (None, None) if no markers are detected.
-        """
+           Returns:
+           list, list:
+               A list of corners of the detected ArUco markers, and a list of their IDs.
+               Returns (None, None) if no markers are detected or if not all specified markers are found.
+           """
 
         if len(arucoIds) != 4:
             print("Error: The number of ArUco markers must be 4.")

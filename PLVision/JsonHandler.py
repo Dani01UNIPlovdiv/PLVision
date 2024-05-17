@@ -34,21 +34,21 @@ class JsonHandler:
         Updates the JSON file with the given new data.
     """
 
-    def __init__(self, file_path, encoder=None):
+    def __init__(self, filePath, encoder=None):
         """
         Constructs all the necessary attributes for the JsonHandler object.
 
         Parameters
         ----------
-        file_path : str
+        filePath : str
             The path to the JSON file.
         encoder : json.JSONEncoder, optional
             The JSON encoder to use (default is json.JSONEncoder).
         """
-        self.file_path = file_path
+        self.file_path = filePath
         self.encoder = encoder if encoder else json.JSONEncoder
 
-    def read_json(self):
+    def readJson(self):
         """
         Reads and returns the data from the JSON file.
 
@@ -64,7 +64,7 @@ class JsonHandler:
                 data = {}
         return data
 
-    def write_json(self, data):
+    def writeJson(self, data):
         """
         Writes the given data to the JSON file.
 
@@ -76,15 +76,15 @@ class JsonHandler:
         with open(self.file_path, 'w') as json_file:
             json.dump(data, json_file, cls=self.encoder, indent=4)
 
-    def update_json(self, new_data):
+    def updateJson(self, newData):
         """
         Updates the JSON file with the given new data.
 
         Parameters
         ----------
-        new_data : dict
+        newData : dict
             The new data to update the JSON file with.
         """
-        data = self.read_json()
-        data.update(new_data)
-        self.write_json(data)
+        data = self.readJson()
+        data.update(newData)
+        self.writeJson(data)
