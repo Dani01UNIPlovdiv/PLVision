@@ -19,12 +19,16 @@ def getFile(fileCount, filePath, fileFormat, all=False):
     list_of_files = [file.replace("storage\\", "storage/") for file in list_of_files]
     # Sort the list of files based on creation time in descending order
     list_of_files.sort(key=os.path.getctime, reverse=True)
+
+    file_contents = []  # List to store the contents of the files
     for file in list_of_files:
         with open(file, 'r') as f:
             content = f.read()
+            file_contents.append(content)  # Append the content of the file to the list
+
     if all:
         # If all is True, return all files
-        return list_of_files
+        return file_contents
     else:
         # If all is False, return the first fileCount files
-        return list_of_files[:fileCount]
+        return file_contents[:fileCount]
