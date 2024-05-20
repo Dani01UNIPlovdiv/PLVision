@@ -13,13 +13,17 @@ import glob  # Import glob
 import os  # Import os
 
 
-def getFile(fileCount, filePath, fileFormat, all=False):  # This function returns the most recent file
-    if all:  # If all is true
-        list_of_files = glob.glob(filePath + fileFormat)
-        list_of_files = [file.replace("storage\\", "storage/") for file in list_of_files]
+def getFile(fileCount, filePath, fileFormat, all=False):
+    # Get a list of all files
+    list_of_files = glob.glob(filePath + fileFormat)
+    list_of_files = [file.replace("storage\\", "storage/") for file in list_of_files]
+
+    # Sort the list of files based on creation time in descending order
+    list_of_files.sort(key=os.path.getctime, reverse=True)
+
+    if all:
+        # If all is True, return all files
         return list_of_files
-    for i in range(fileCount):
-        list_of_files = glob.glob(filePath + fileFormat)  # Get a list of files
-        latest_file = max(list_of_files, key=os.path.getctime)  # Get the latest file
-        latest_file = latest_file.replace("storage\\", "storage/")  # Remove storage\\ from the string
-        return latest_file  # Return the latest file
+    else:
+        # If all is False, return the first fileCount files
+        return list_of_files[:fileCount]
