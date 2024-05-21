@@ -16,13 +16,8 @@ import os  # Import os
 def getFile(fileCount, filePath, fileFormat, all=False):
     # Use glob to get all files in the directory that match the file format
     files = glob.glob(f"{filePath}/*.{fileFormat}")
-
-    # Sort the files based on their modification time
-    sorted_files = sorted(files, key=os.path.getmtime, reverse=True)
-
-    # If all is True, return all files
+    latest_file = max(files, key=os.path.getctime)  # Get the latest file
     if all:
-        return sorted_files
-
-    # Otherwise, return the specified number of most recent files
-    return sorted_files[:fileCount]
+        return files
+    else:
+        return latest_file
