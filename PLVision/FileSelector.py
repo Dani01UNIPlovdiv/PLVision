@@ -14,21 +14,15 @@ import os  # Import os
 
 
 def getFile(fileCount, filePath, fileFormat, all=False):
-    # Get a list of all files
-    list_of_files = glob.glob(filePath + fileFormat)
-    list_of_files = [file.replace("storage\\", "storage/") for file in list_of_files]
-    # Sort the list of files based on creation time in descending order
-    list_of_files.sort(key=os.path.getctime, reverse=True)
+    # Use glob to get all files in the directory that match the file format
+    files = glob.glob(f"{filePath}/*.{fileFormat}")
 
-    file_contents = []  # List to store the contents of the files
-    for file in list_of_files:
-        with open(file, 'r') as f:
-            content = f.read()
-            file_contents.append(content)  # Append the content of the file to the list
+    # Sort the files based on their modification time
+    sorted_files = sorted(files, key=os.path.getmtime, reverse=True)
 
+    # If all is True, return all files
     if all:
-        # If all is True, return all files
-        return file_contents
-    else:
-        # If all is False, return the first fileCount files
-        return file_contents[:fileCount]
+        return sorted_files
+
+    # Otherwise, return the specified number of most recent files
+    return sorted_files[:fileCount]
