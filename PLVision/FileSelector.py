@@ -14,9 +14,14 @@ import os  # Import os
 
 
 def getFile(fileCount, filePath, fileFormat, all=False):
-    # Use glob to get all files in the directory that match the file format
     files = glob.glob(f"{filePath}/*.{fileFormat}")
-    latest_file = max(files, key=os.path.getctime)  # Get the latest file
+
+    # Check if the list of files is not empty
+    if files:
+        latest_file = max(files, key=os.path.getctime)  # Get the latest file
+    else:
+        latest_file = None  # Return None or a default value if the list is empty
+
     if all:
         return files
     else:
