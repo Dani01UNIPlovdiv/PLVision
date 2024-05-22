@@ -5,7 +5,7 @@
 * Revision history:
 * Date       Author      Description
 * -----------------------------------------------------------------
-** 070524     IlV         Initial release
+** 130524     IlV         Initial release
 * -----------------------------------------------------------------
 *
 """
@@ -13,42 +13,55 @@
 import unittest
 import os
 import json
-from JsonHandler import JsonHandler
+
+from PLVision.JsonHandler import JsonHandler
 
 
 class TestJsonHandler(unittest.TestCase):
     def setUp(self):
-        self.jsonHandler = JsonHandler('test.json')
-
-    def tearDown(self):
-        if os.path.exists('test.json'):
-            os.remove('test.json')
-
-    def test_read_json(self):
-        with open('test.json', 'w') as f:
+        self.jsonHandler = JsonHandler('testData/test.json')
+        with open('testData/test.json', 'w') as f:
             json.dump({"key": "value"}, f)
 
+    def test_read_json(self):
         data = self.jsonHandler.read_json()
         self.assertEqual(data, {"key": "value"})
+
+    def test_read_json_missing_file(self):
+        jsonHandler = JsonHandler('testData/missing.json')
+        with self.assertRaises(FileNotFoundError):
+            jsonHandler.read_json()
 
     def test_write_json(self):
         self.jsonHandler.write_json({"key": "value"})
 
-        with open('test.json', 'r') as f:
+        with open('testData/test.json', 'r') as f:
             data = json.load(f)
 
         self.assertEqual(data, {"key": "value"})
 
+    def test_write_json_creates_file(self):
+        jsonHandler = JsonHandler('testData/missing.json')
+        jsonHandler.write_json({"key": "value"})
+        self.assertTrue(os.path.exists('testData/missing.json'))
+        if os.path.exists('testData/missing.json'):
+            os.remove('testData/missing.json')
+
     def test_update_json(self):
-        with open('test.json', 'w') as f:
+        with open('testData/test.json', 'w') as f:
             json.dump({"key": "value"}, f)
 
         self.jsonHandler.update_json({"new_key": "new_value"})
 
-        with open('test.json', 'r') as f:
+        with open('testData/test.json', 'r') as f:
             data = json.load(f)
 
         self.assertEqual(data, {"key": "value", "new_key": "new_value"})
+
+    def test_update_json_missing_file(self):
+        jsonHandler = JsonHandler('testData/missing.json')
+        with self.assertRaises(FileNotFoundError):
+            jsonHandler.update_json({"key": "value"})
 
 
 if __name__ == '__main__':

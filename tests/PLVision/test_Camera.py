@@ -23,6 +23,13 @@ class TestCamera(unittest.TestCase):
         self.assertEqual(1920, self.camera.width)
         self.assertEqual(1080, self.camera.height)
 
+    def test_init_resolution_1280x720(self):
+        """Test if the Camera object is created with the correct resolution when no width and height are given."""
+        camera = Camera(cameraIndex=0, width=1280, height=720)
+        self.assertEqual(0, camera.cameraIndex)
+        self.assertEqual(1280, camera.width)
+        self.assertEqual(720, camera.height)
+
     def test_setCameraIndex(self):
         """Test if the setCameraIndex method raises a ValueError when given a negative value."""
         with self.assertRaises(ValueError):

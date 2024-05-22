@@ -12,17 +12,22 @@
 
 import unittest
 
+import cv2
 import numpy as np
 
 from PLVision.Calibration import CameraCalibrator
 
 
 class TestCameraCalibrator(unittest.TestCase):
+    @classmethod
+    def setUpClass(self):
+        self.calibrationPattern = cv2.imread("testData/calibration/calibration_chessboard.png")
+
     def setUp(self):
         """Set up the CameraCalibrator object for testing."""
-        self.calibrator = CameraCalibrator(10, 15, 25)
+        self.calibrator = CameraCalibrator(26, 15, 25)
         self.assertIsNotNone(self.calibrator)
-        self.assertEqual(10, self.calibrator.chessboardWidth)
+        self.assertEqual(26, self.calibrator.chessboardWidth)
         self.assertEqual(15, self.calibrator.chessboardHeight)
         self.assertEqual(25, self.calibrator.chessboardSquaresSize)
 
@@ -34,15 +39,37 @@ class TestCameraCalibrator(unittest.TestCase):
 
     def test_findCorners(self):
         """Test if the findCorners method returns the correct types when given a grayscale image."""
-        gray = np.zeros((100, 100), dtype=np.uint8)
-        ret, corners = self.calibrator.findCorners(gray)
+        ret, corners = self.calibrator.findCorners(self.calibrationPattern)
+        self.assertIsInstance(ret, bool)
+        self.assertIsNotNone(corners)
+        self.assertTrue(ret)
+        # Assert that corners is a 3D numpy array
+        self.assertEqual(len(corners.shape), 3)
+        # Assert the width and height of the corners
+        expected = self.calibrator.chessboardWidth * self.calibrator.chessboardHeight
+        actual = corners.shape[0]
+
+        self.assertEqual(actual,expected)
+
+    def test_findCorners_wrong_chessboard_width(self):
+        """Test if the findCorners method returns the correct types when given a grayscale image."""
+        calibrator = CameraCalibrator(25, 15, 25)
+        ret, corners = calibrator.findCorners(self.calibrationPattern)
+        self.assertIsInstance(ret, bool)
+        self.assertIsNone(corners)
+        self.assertFalse(ret)
+
+    def test_findCorners_wrong_chessboard_height(self):
+        """Test if the findCorners method returns the correct types when given a grayscale image."""
+        calibrator = CameraCalibrator(26, 14, 25)
+        ret, corners = calibrator.findCorners(self.calibrationPattern)
         self.assertIsInstance(ret, bool)
         self.assertIsNone(corners)
         self.assertFalse(ret)
 
     def test_refineCorners(self):
         """Test if the refineCorners method returns a numpy array of the same shape as the input corners."""
-        gray = np.zeros((100, 100), dtype=np.uint8)
+        gray = cv2.cvtColor(self.calibrationPattern, cv2.COLOR_BGR2GRAY)
         corners = np.array([[[50, 50]]], dtype=np.float32)
         result = self.calibrator.refineCorners(gray, corners)
         self.assertIsInstance(result, np.ndarray)
@@ -69,7 +96,6 @@ class TestCameraCalibrator(unittest.TestCase):
             self.calibrator.saveCalibrationData(mtx, dist, ppm, tmpdirname)
             self.assertTrue(os.path.exists(os.path.join(tmpdirname, "camera_calibration.npz")))
 
-    # ... add more tests ...
 
 
 if __name__ == '__main__':
