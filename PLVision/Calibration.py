@@ -247,7 +247,19 @@ class CameraCalibrator:
 
         # Return calibration success, calibration data, and image
         return True, (dist, mtx, rvecs, tvecs, ppm, meanError), image, corners
+def calculateOffsets(corners, ppm):
+    """
+    Calculate the offsets of the detected corners from the origin in real-world units.
 
+    Parameters:
+        corners (np.ndarray): The detected corners in the image.
+        ppm (float): The pixels-per-metric ratio.
+
+    Returns:
+        np.ndarray: The calculated offsets of the corners from the origin in real-world units.
+    """
+    offsets = corners * (1 / ppm)
+    return offsets
 
 if __name__ == "__main__":
     camera = Camera(cameraIndex=0, width=1920, height=1080)
