@@ -2,7 +2,7 @@ import cv2
 
 
 def get_corners(image, arucoIds, maxAttempts=10):
-    aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4x4_250)
+    aruco_dict = cv2.aruco.getPredefinedDictionary(cv2.aruco.DICT_4X4_250)
     parameters = cv2.aruco.DetectorParameters()
 
     maxAttempts = maxAttempts
