@@ -162,7 +162,7 @@ class CameraCalibrator:
                       and translation vectors determined during calibration.
        """
         imageShape = image.shape[::-1]  # FIXME
-        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(self.objpoints, self.imgpoints, imageShape, None, None)
+        ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(self.objpoints, self.imgpoints, (1280,720), None, None)
         return dist, mtx, rvecs, tvecs
 
     def calculateMeanError(self, dist, mtx, rvecs, tvecs):
