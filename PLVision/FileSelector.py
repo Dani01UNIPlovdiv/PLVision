@@ -13,6 +13,7 @@ import glob  # Import glob
 import os  # Import os
 from datetime import datetime  # Import datetime
 import cv2  # Import OpenCV
+import json # Import json
 
 
 def getFile(fileCount, filePath, fileFormat, all=False):
