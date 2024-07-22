@@ -11,6 +11,7 @@
 """
 import glob  # Import glob
 import os  # Import os
+from datetime import datetime  # Import datetime
 
 
 def getFile(fileCount, filePath, fileFormat, all=False):
