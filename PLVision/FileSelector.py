@@ -12,7 +12,7 @@
 import glob  # Import glob
 import os  # Import os
 from datetime import datetime  # Import datetime
-import opencv as cv2  # Import OpenCV
+import cv2  # Import OpenCV
 
 
 def getFile(fileCount, filePath, fileFormat, all=False):
