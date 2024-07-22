@@ -42,3 +42,4 @@ def saveFile(image):
 
     # Save the image to the file
     cv2.imwrite(filename, image)
+    return filename
