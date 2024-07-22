@@ -45,3 +45,17 @@ def saveFile(image):
     # Save the image to the file
     cv2.imwrite(filename, image)
     return filename
+def saveContours(contours, filename):
+    # Change the extension of the filename to .json
+    filename = filename.rsplit('.', 1)[0] + '.json'
+
+    # Create a list to hold the contour data
+    contours_list = []
+
+    # Convert each contour to a list and add it to contours_list
+    for contour in contours:
+        contours_list.append(contour.tolist())
+
+    # Open the file in write mode and dump the contours_list into it
+    with open(filename, 'w') as f:
+        json.dump(contours_list, f)
