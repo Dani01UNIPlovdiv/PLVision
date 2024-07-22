@@ -14,7 +14,7 @@ import os  # Import os
 
 
 def getFile(fileCount, filePath, fileFormat, all=False):
-    files = glob.glob(f"{filePath}/*.{fileFormat}")
+    files = glob.glob(f"{filePath}/**/*.{fileFormat}", recursive=True)
 
     # Check if the list of files is not empty
     if files:
@@ -26,3 +26,19 @@ def getFile(fileCount, filePath, fileFormat, all=False):
         return files
     else:
         return latest_file
+def saveFile(image):
+    # Get the current date and time
+    current_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
+
+    # Create a new directory path
+    dir_path = 'storage/' + current_time
+
+    # Create the directory if it doesn't exist
+    if not os.path.exists(dir_path):
+        os.makedirs(dir_path)
+
+    # Create the filename
+    filename = dir_path + '/' + current_time + '.jpg'
+
+    # Save the image to the file
+    cv2.imwrite(filename, image)
