@@ -14,7 +14,7 @@ import numpy as np  # Import numpy
 
 from PLVision.Camera import Camera
 import os
-
+import json
 
 class CameraCalibrator:
     """
