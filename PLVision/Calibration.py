@@ -150,7 +150,9 @@ class CameraCalibrator:
         # Calculate overall mean square size in pixels and convert to PPM
         squareSizePxMean = np.mean(squareSizesPx)
         ppm = squareSizePxMean / self.chessboardSquaresSize
-
+        #save the ppm value in a json inside /home/cnc/Desktop/LinuxCNC/storage/Calibration/
+        with open('/home/cnc/Desktop/LinuxCNC/storage/Calibration/ppm.json', 'w') as f:
+            json.dump(ppm, f)
         return ppm
 
     def calibrateCamera(self, image):
