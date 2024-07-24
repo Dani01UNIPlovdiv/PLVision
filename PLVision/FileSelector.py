@@ -21,14 +21,17 @@ def getFile(fileCount, filePath, fileFormat, all=False):
 
     # Check if the list of files is not empty
     if files:
-        latest_file = max(files, key=os.path.getctime)  # Get the latest file
+        # Sort the files by creation time in descending order
+        files.sort(key=os.path.getctime, reverse=True)
+        # Get the most recent files
+        latest_files = files[:fileCount]
     else:
-        latest_file = None  # Return None or a default value if the list is empty
+        latest_files = []  # Return an empty list if the list of files is empty
 
     if all:
         return files
     else:
-        return latest_file
+        return latest_files
 def saveFile(image):
     # Get the current date and time
     current_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
