@@ -30,8 +30,10 @@ def getFile(fileCount, filePath, fileFormat, all=False):
 
     if all:
         return files
+    elif fileCount == 1 and latest_files:
+        return latest_files[0]  # Return the most recent file as a string
     else:
-        return latest_files
+        return latest_files  # Return the most recent files as a list
 def saveFile(image):
     # Get the current date and time
     current_time = datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
