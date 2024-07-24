@@ -248,6 +248,13 @@ class CameraCalibrator:
         self.saveCalibrationData(mtx, dist, ppm, path)
 
         # Return calibration success, calibration data, and image
+        #print all the data
+        print("Distortion Coefficients: ", dist)
+        print("Camera Matrix: ", mtx)
+        print("Rotation Vectors: ", rvecs)
+        print("Translation Vectors: ", tvecs)
+        print("Pixels-per-metric Ratio: ", ppm)
+        print("Mean Error: ", meanError)
         return True, (dist, mtx, rvecs, tvecs, ppm, meanError), image, corners
 def calculateOffsets(corners, ppm):
     """
