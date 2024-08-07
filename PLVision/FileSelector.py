@@ -81,9 +81,15 @@ def getEtalonContours():
         with open(file, 'r') as f:
             data = json.load(f)
 
-        # Check if the data contains the specified keys
-        if keys.issubset(data.keys()):
-            # If it does, add the file to the list of etalon contours
-            etalon_contours.append(file)
+        # Check if the data is a list
+        if isinstance(data, list):
+            # Iterate over the dictionaries in the list
+            for item in data:
+                # Check if the dictionary contains the specified keys
+                if keys.issubset(item.keys()):
+                    # If it does, add the file to the list of etalon contours
+                    etalon_contours.append(file)
+                    break  # Exit the loop as soon as a matching dictionary is found
+
     # Return the list of etalon contours
     return etalon_contours
