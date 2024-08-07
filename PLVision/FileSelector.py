@@ -83,10 +83,10 @@ def getEtalonContours():
 
         # Check if the data is a list
         if isinstance(data, list):
-            # Iterate over the dictionaries in the list
+            # Iterate over the items in the list
             for item in data:
-                # Check if the dictionary contains the specified keys
-                if keys.issubset(item.keys()):
+                # Check if the item is a dictionary and contains the specified keys
+                if isinstance(item, dict) and keys.issubset(item.keys()):
                     # If it does, add the file to the list of etalon contours
                     etalon_contours.append(file)
                     break  # Exit the loop as soon as a matching dictionary is found
