@@ -92,5 +92,4 @@ def getEtalonContours():
                     break  # Exit the loop as soon as a matching dictionary is found
 
     # Return the list of etalon contours
-    print(etalon_contours)
     return etalon_contours
