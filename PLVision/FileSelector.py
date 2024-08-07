@@ -70,7 +70,7 @@ def getEtalonContours():
     keys = {"nearest_point", "furthest_point", "longest_line", "width_mm", "height_mm", "rotation", "centroid"}
 
     # Get all .json files in the storage folder
-    files = glob.glob("storage/*.json")
+    files = glob.glob("storage/**/*.json")
 
     # Create a list to store the etalon contours
     etalon_contours = []
