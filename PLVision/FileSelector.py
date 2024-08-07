@@ -92,4 +92,5 @@ def getEtalonContours():
                 etalon_contours.append(file)
 
     # Return the list of etalon contours
+    print(etalon_contours)
     return etalon_contours
