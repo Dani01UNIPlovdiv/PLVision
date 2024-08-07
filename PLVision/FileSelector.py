@@ -65,3 +65,25 @@ def saveContours(contours, filename):
     # Open the file in write mode and dump the contours_list into it
     with open(filename, 'w') as f:
         json.dump(contours_list, f)
+def getEtalonContours():
+    # Define the keys to look for
+    keys = {"nearest_point", "furthest_point", "longest_line", "width_mm", "height_mm", "rotation", "centroid"}
+
+    # Get all .json files in the storage folder
+    files = glob.glob("storage/*.json")
+
+    # Create a list to store the etalon contours
+    etalon_contours = []
+
+    # Iterate over the files
+    for file in files:
+        # Open the file and load the JSON data
+        with open(file, 'r') as f:
+            data = json.load(f)
+
+        # Check if the data contains the specified keys
+        if keys.issubset(data.keys()):
+            # If it does, add the file to the list of etalon contours
+            etalon_contours.append(file)
+    # Return the list of etalon contours
+    return etalon_contours
