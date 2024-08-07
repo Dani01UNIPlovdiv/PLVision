@@ -82,9 +82,9 @@ def getEtalonContours():
             data = json.load(f)
 
         # Check if the data is a list
-        if isinstance(data, list) and len(data) == 1 and isinstance(data[0], str):
+        if isinstance(data, list) and len(data) > 1 and isinstance(data[-1], str):
             # Deserialize the string into a JSON object
-            item = json.loads(data[0])
+            item = json.loads(data[-1])
 
             # Check if the JSON object is a dictionary and contains the specified keys
             if isinstance(item, dict) and keys.issubset(item.keys()):
