@@ -80,6 +80,7 @@ def getEtalonContours():
         # Open the file and load the JSON data
         with open(file, 'r') as f:
             data = json.load(f)
+            print(data)
 
         # Check if the data is a list
         if isinstance(data, list) and len(data) > 1 and isinstance(data[-1], str):
