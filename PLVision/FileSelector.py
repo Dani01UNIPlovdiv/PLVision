@@ -88,6 +88,7 @@ def getEtalonContours():
             if keys.issubset(data[-1].keys()):
                 # If it does, add the file to the list of etalon contours
                 etalon_contours.append(file)
+        print(etalon_contours)
 
     # Return the list of etalon contours
     return etalon_contours
