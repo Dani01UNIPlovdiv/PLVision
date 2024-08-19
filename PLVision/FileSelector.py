@@ -83,7 +83,7 @@ def getEtalonContours():
             print(data)
 
         # Check if the data is a list
-        if isinstance(data, list) and len(data) > 1 and isinstance(data[-1], dict):
+        if isinstance(data, list) and len(data) > 1:
             # Check if the dictionary contains the specified keys
             if keys.issubset(data[-1].keys()):
                 # If it does, add the file to the list of etalon contours
